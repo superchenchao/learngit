@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+    <script src="https://unpkg.com/vue-validator@2.1.7/dist/vue-validator.min.js"></script>
+
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- JavaScript 放置在文档最后面可以使页面加载速度更快 -->
+    <!-- 可选: 包含 jQuery 库 -->
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 可选: 合并了 Bootstrap JavaScript 插件 -->
+    <script src="http://apps.bdimg.com/libs/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id="app" class="container">
+    <validator name="validation">
+        <form novalidate>
+            <div class="form-group">
+                <label>账号</label>
+                <input type='text' class="form-control"
+                       v-validate:username="['required']" lazy/>
+                <span v-show="$validation.username.required">输入账号不能为空</span>
+            </div>
+
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input class="form-control" id="password" type="password"/>
+            </div>
+
+            <div class="form-group form-inline">
+                <label>出生年月</label>
+                <select class="form-control">
+                    <option>1999</option>
+                    <option>1998</option>
+                    <option>1997</option>
+                    <option>1996</option>
+                </select>
+                <label>年</label>
+                <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>性别</label>
+                <div class="form-control">
+                    <label for="male">男</label>
+                    <input id="male" type="radio"/>
+                    <label for="female">女</label>
+                    <input id="female" type="radio" checked/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="showself">自我介绍</label>
+                <textarea class="form-control" id="showself" v-validate:showself="{ maxlength: 256 }"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>爱好</label>
+                <div class="form-control">
+                    <label for="sport">运动</label>
+                    <input id="sport" type="checkbox"/>
+                    <label for="sing">女</label>
+                    <input id="sing" type="checkbox" checked/>
+                    <label for="reading">看书</label>
+                    <input id="reading" type="checkbox" checked/>
+                </div>
+            </div>
+
+
+            <button class="btn btn-danger btn-block" @click="onReset">重置</button>
+            <button class="btn btn-danger btn-block" :disabled="$validation.invalid">提交</button>
+        </form>
+        <pre>{{ $validation1 | json }}</pre>
+    </validator>
+</div>
+<script>
+
+    new Vue({
+        el: "#app",
+        data: {
+            msg: "Hello world",
+            comment:"",
+            username:"",
+            showself:""
+        },
+        methods: {
+            onReset: function () {
+                this.$resetValidation()
+            }
+        }
+
+    });
+</script>
+</body>
+</html>

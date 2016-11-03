@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.10/vue-router.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 可选: 合并了 Bootstrap JavaScript 插件 -->
+    <script src="http://apps.bdimg.com/libs/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <style>
+        .v-link-active{
+            background-color:darkseagreen;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <template id="home">
+        <ul class="nav nav-tabs">
+            <li>
+                <a v-link="{path:'/home/news'}">News</a>
+            </li>
+            <li>
+                <a v-link="{path:'/home/message'}">Messages</a>
+            </li>
+        </ul>
+        <router-view></router-view>
+        <template id="news">
+            <ul>
+                <li>news01</li>
+                <li>news02</li>
+                <li>news03</li>
+                <li>news04</li>
+            </ul>
+        </template>
+        <template id="message">
+            <ul>
+                <li>message01</li>
+                <li>message02</li>
+                <li>message03</li>
+            </ul>
+        </template>
+    </template>
+    <template id="about">
+            <h1>this is about page</h1>
+    </template>
+    <div class="list-group">
+        <a class="list-group-item" v-link="{path:'/home'}">Home</a>
+        <a class="list-group-item" v-link="{path:'/about'}">About</a>
+    </div>
+    <!-- route outlet -->
+    <router-view></router-view>
+</div>
+<script>
+
+    var About=Vue.extend({
+        template:"#about"
+    });
+    var Home=Vue.extend({
+        template:"#home",
+        route:{
+            activate:function(){
+                console.log("start home....");
+            }
+        }
+    });
+
+    var News =Vue.extend({
+        template:"#news"
+    })
+    var Message =Vue.extend({
+        template:"#message"
+    })
+
+    var router = new VueRouter()
+    router.start({},"#app");
+    router.map({
+        "/home":{
+            component:Home,
+            subRoutes:{
+                '/news':{
+                    component:News,
+                },
+                '/message':{
+                    component:Message
+                }
+            }
+        },
+        '/about':{
+            component:About
+        }
+    });
+
+</script>
+</body>
+</html>

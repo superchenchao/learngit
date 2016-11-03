@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script type="text/javascript" src="js/vue.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/0.7.10/vue-router.min.js"></script>
+
+</head>
+<body>
+<div id="app">
+    <h1>Hello App!</h1>
+    <div class="list-group">
+        <a class="list-group-item" v-link="{path:'/home'}">Home</a>
+        <a class="list-group-item" v-link="{path:'/about'}">About</a>
+    </div>
+    <!-- route outlet -->
+    <router-view></router-view>
+</div>
+<script>
+
+    // Define some components
+    var Home = {
+        template: '<p>This is Home Page!</p>'
+    }
+
+    var About = {
+        template: '<p>This is About Page!</p>'
+    }
+
+    // The router needs a root component to render.
+    // For demo purposes, we will just use an empty one
+    // because we are using the HTML as the app template.
+    // !! Note that the App is not a Vue instance.
+    var App = {}
+
+    // Create a router instance.
+    // You can pass in additional options here, but let's
+    // keep it simple for now.
+    var router = new VueRouter()
+
+    // Define some routes.
+    // Each route should map to a component. The "component" can
+    // either be an actual component constructor created via
+    // Vue.extend(), or just a component options object.
+    // We'll talk about nested routes later.
+    router.map({
+        '/home': {
+            component: Home
+        },
+        '/about': {
+            component: About
+        }
+    })
+
+    // Now we can start the app!
+    // The router will create an instance of App and mount to
+    // the element matching the selector #app.
+    router.redirect({
+        '/': '/home'
+    });
+    router.start(App, '#app');
+
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+
+</head>
+<body>
+    <div id="app">
+        {{msg}}
+        <button @click="clickHandler">请求</button>
+    </div>
+<script>
+
+    new Vue({
+        el:"#app",
+        data:{
+            msg:"Hello world"
+        },
+        methods:{
+            clickHandler:function(){
+                this.$http.get('http://211.149.193.19:8080/api/customers').then(function(resp){
+                    console.log(resp);
+                })
+            }
+        }
+    });
+</script>
+</body>
+</html>

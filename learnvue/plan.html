@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计划板</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <style>
+        .avatar {
+            height: 75px;
+            margin: 0 auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-details {
+            background-color: #f5f5f5;
+            border-right: 1px solid #ddd;
+            margin: -10px 0;
+        }
+
+        .time-block {
+            padding: 10px;
+        }
+
+        .comment-section {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="wrapper">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="glyphicon glyphicon-time"></i>
+                    计划表
+                </a>
+                <ul class="nav navbar-nav">
+                    <li><a v-link="'/home'">首页</a></li>
+                    <li><a v-link="'/time-entries'">计划列表</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="col-sm-3">
+                <sidebar :time="totalTime"></sidebar>
+            </div>
+            <div class="col-sm-9">
+                <router-view></router-view>
+            </div>
+        </div>
+    </div>
+
+    <template id="home">
+        <div class="jumbotron">
+            <h1>任务追踪</h1>
+            <p>
+                <strong>
+                    <a v-link="'/time-entries'">创建一个任务</a>
+                </strong>
+            </p>
+        </div>
+    </template>
+
+    <template id="time-entries">
+        <div>
+            <!--`v-if`是vue的一个指令-->
+            <!--`$route.path`是当前路由对象的路径，会被解析为绝对路径当-->
+            <!--`$route.path !== '/time-entries/log-time'`为`true`是显示，`false`，为不显示。-->
+            <!--v-link 路由跳转地址-->
+
+            <button
+                    v-if="$route.path.indexOf('/time-entries/log-time')==-1"
+                    v-link="'/time-entries/log-time'"
+                    class="btn btn-primary">
+                创建
+            </button>
+
+            <hr>
+
+            <!--下一级视图-->
+            <router-view></router-view>
+
+            <div class="time-entries">
+                <p v-if="!timeEntries.length"><strong>还没有任何任务</strong></p>
+
+                <div class="list-group">
+                    <!--v-for 循环渲染-->
+                    <a class="list-group-item" v-for="timeEntry in timeEntries">
+                        <div class="row">
+
+                            <div class="col-sm-2 user-details">
+                                <!--`:src`属性，这个是vue的属性绑定简写`v-bind`可以缩写为`:`-->
+                                <!--比如a标签的`href`可以写为`:href`并且在vue的指令里就一定不要写插值表达式了(`:src={{xx}}`)，vue自己会去解析-->
+                                <img :src="timeEntry.user.image" class="avatar img-circle img-responsive"/>
+                                <p class="text-center">
+                                    <strong>
+                                        {{ timeEntry.user.name }}
+                                    </strong>
+                                </p>
+                            </div>
+
+                            <div class="col-sm-2 text-center time-block">
+                                <h3 class="list-group-item-text total-time">
+                                    <i class="glyphicon glyphicon-time"></i>
+                                    {{ timeEntry.totalTime }}
+                                </h3>
+                                <p class="label label-primary text-center">
+                                    <i class="glyphicon glyphicon-calendar"></i>
+                                    {{ timeEntry.date }}
+                                </p>
+                            </div>
+
+                            <div class="col-sm-7 comment-section">
+                                <p>{{ timeEntry.comment }}</p>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <!--事件绑定简写 @xxx-->
+                                <button
+                                        class="btn btn-xs btn-danger delete-button"
+                                        @click="deleteTimeEntry(timeEntry)">
+                                    X
+                                </button>
+                            </div>
+
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="logtime">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <label>日期</label>
+                    <input
+                            type="date"
+                            class="form-control"
+                            v-model="timeEntry.date"
+                            placeholder="Date"
+                    />
+                </div>
+                <div class="col-sm-6">
+                    <label>时间</label>
+                    <input
+                            type="number"
+                            class="form-control"
+                            v-model="timeEntry.totalTime"
+                            placeholder="Hours"
+                    />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <label>备注</label>
+                    <input
+                            type="text"
+                            class="form-control"
+                            v-model="timeEntry.comment"
+                            placeholder="Comment"
+                    />
+                </div>
+            </div>
+            <button class="btn btn-primary" @click="save()">保存</button>
+            <button v-link="'/time-entries'" class="btn btn-danger">取消</button>
+            <hr>
+        </div>
+    </template>
+
+    <template id="sidebar">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h1 class="text-center">已有时长</h1>
+            </div>
+
+            <div class="panel-body">
+                <h1 class="text-center">{{ time }} 小时</h1>
+            </div>
+
+        </div>
+    </template>
+</div>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/vue-router.min-0.7.10.js"></script>
+<script>
+
+    var Home = Vue.extend({
+        template: "#home"
+    });
+
+    var TimeEntries = Vue.extend({
+        template: "#time-entries",
+        data: function () {
+            return {
+                timeEntries: [
+                ]
+            }
+        },
+        methods: {
+            deleteTimeEntry: function (timeEntry) {
+                //这个方法用于删除某一项计划
+                var index = this.timeEntries.indexOf(timeEntry)
+                if (window.confirm('确定要删除吗?')) {
+                    this.timeEntries.splice(index, 1)
+                    //这里会派发到父组件上，执行父组件events里的deleteTime方法
+                    this.$dispatch('deleteTime', timeEntry)
+                }
+            }
+        },
+        events: {
+            timeUpdate: function (timeEntry) {
+                this.timeEntries.push(timeEntry)
+                //继续向上派发
+                return true
+            }
+        }
+    })
+
+    var LogTime = Vue.extend({
+        template: "#logtime",
+        data: function () {
+            return {
+                timeEntry:{
+                    user: {
+                        name: '二哲',
+                        email: 'kodo@forchange.cn',
+                        image: 'https://sfault-avatar.b0.upaiyun.com/888/223/888223038-5646dbc28d530_huge256'
+                    }
+                }
+
+            }
+        },
+        methods: {
+            save: function () {
+                var timeEntry = this.timeEntry
+                this.$dispatch('timeUpdate', timeEntry)
+                this.timeEntry = {}
+            }
+        }
+    });
+
+    Vue.component("sidebar",{
+        template:"#sidebar",
+        props:['time']
+    });
+
+    var router = new VueRouter()
+    router.map({
+        '/home': {
+            component: Home
+        },
+        '/time-entries': {
+            component: TimeEntries,
+            subRoutes:{
+                '/log-time':{
+                    component:LogTime
+                }
+            }
+        }
+    });
+
+    router.redirect({
+        '*': '/home'
+    });
+
+    router.start({
+        data:function(){
+            return{
+                totalTime:0
+            }
+        },
+        events:{
+            timeUpdate:function(timeEntry) {
+                this.totalTime += parseFloat(timeEntry.totalTime)
+            },
+            deleteTime:function (timeEntry) {
+                this.totalTime -= parseFloat(timeEntry.totalTime)
+            }
+        }
+    }, '#app');
+</script>
+<script src="js/jquery-1.12.2.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

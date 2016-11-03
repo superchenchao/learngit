@@ -1,0 +1,25 @@
+
+.navbar-brand{
+	padding-top: 0;
+}
+.message{
+	margin-top: 14px;
+	font-size: 18px;
+	color: #888;
+}
+.message .badge{
+	display: inline-block;
+	position: relative;
+	top: -8px;
+	padding:0px 7px 5px;
+}
+@media(max-width: 1200px){
+	.navbar-form{
+		margin-right: 0;
+	}
+	.message .glyphicon{
+		display: block;
+		margin-left: 5px;
+		margin-bottom: 10px;
+	}
+}

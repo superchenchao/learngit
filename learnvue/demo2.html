@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+    <script src="https://unpkg.com/vue-validator@2.1.7/dist/vue-validator.min.js"></script>
+
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- JavaScript 放置在文档最后面可以使页面加载速度更快 -->
+    <!-- 可选: 包含 jQuery 库 -->
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!-- 可选: 合并了 Bootstrap JavaScript 插件 -->
+    <script src="http://apps.bdimg.com/libs/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div id="app" class="container">
+    <validator name="validation">
+        <form novalidate>
+            <input type="text" v-validate:user-name="{ minlength: 16 }">
+            <div>
+                <span v-if="$validation.userName.minlength">Your user name is too short.</span>
+            </div>
+            <input type="text" v-validate:comment="{ minlength: 16, maxlength: 128 }">
+            <div>
+                <span v-show="$validation.comment.minlength">Your comment is too short.</span>
+                <span v-show="$validation.comment.maxlength">Your comment is too long.</span>
+            </div>
+            <input type="submit" value="send" v-if="valid">
+        </form>
+    </validator>
+</div>
+<script>
+
+    new Vue({
+        el:"#app",
+        data:{
+            msg:"Hello world"
+        },
+        methods:{
+            fn:function(){
+                console.log(JSON.stringify(this.$validation1));
+            }
+        }
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <parent></parent>
+        <template id="parent">
+            <h1>this is parent</h1>
+        </template>
+    </div>
+<script>
+    Vue.component("parent",{
+        template:"#parent"
+    });
+    new Vue({
+        el:"#app",
+        data:{
+
+        }
+    });
+</script>
+</body>
+</html>
